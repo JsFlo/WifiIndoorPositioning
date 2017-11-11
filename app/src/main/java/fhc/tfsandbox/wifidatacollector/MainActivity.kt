@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(),
         WifiScanResultsBroadcastReceiver.WifiScanResultsListener {
 
     companion object {
-        private const val BATCH_SIZE = 10
+        private const val BATCH_SIZE = 1000
         private const val PREF_FILE_NAME = "session_prefs"
         private const val PREF_SESSION_COUNTER = "PREF_SESSION_COUNTER"
     }
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(),
 
         // provides the file output stream and handles naming the files
         val fileCounterStreamProvider = FileCounterStreamProvider(this,
-                sessionPrefix.toString(), "session_prefix_test", fileExt = ".json")
+                sessionPrefix.toString(), "wifi_train_data", fileExt = ".json")
         // uses a stream provider to write to the files provided
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
         // list that will output a list every time the capacity reaches the batch size
