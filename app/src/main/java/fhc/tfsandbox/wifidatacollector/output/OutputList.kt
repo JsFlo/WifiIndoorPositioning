@@ -9,6 +9,14 @@ class OutputList<in T>(private val listOutputListeners: List<ListOutputListener<
         checkIfShouldOutput(dataList.size)
     }
 
+    fun clear() {
+        dataList.clear()
+    }
+
+    fun size(): Int {
+        return dataList.size
+    }
+
     private fun checkIfShouldOutput(count: Int) {
         if (count >= outputFrequency) {
             val clonedDataList = dataList.clone()

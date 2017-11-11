@@ -16,12 +16,16 @@ import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), ListOutputListener<WifiScanResult>, WifiScanResultsBroadcastReceiver.WifiScanResultsListener {
+class MainActivity : AppCompatActivity(),
+        ListOutputListener<WifiScanResult>,
+        WifiScanResultsBroadcastReceiver.WifiScanResultsListener {
+
+    companion object {
+        private const val BATCH_SIZE = 250
+    }
 
     private lateinit var outputList: OutputList<WifiScanResult>
-    private var counter = 0
-    private val BATCH_SIZE = 250
-
+    private var writeCounter = 0
     private lateinit var wifiScanReceiver: WifiScanResultsBroadcastReceiver
 
     @SuppressLint("WifiManagerLeak")
@@ -30,7 +34,7 @@ class MainActivity : AppCompatActivity(), ListOutputListener<WifiScanResult>, Wi
         setContentView(R.layout.activity_main)
         setupViews()
 
-        val fileCounterStreamProvider = FileCounterStreamProvider(this, "train_data")
+        val fileCounterStreamProvider = FileCounterStreamProvider(this, "wifi_train_data")
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
         outputList = OutputList(listOf(fileWriter, this), BATCH_SIZE)
 
@@ -38,8 +42,13 @@ class MainActivity : AppCompatActivity(), ListOutputListener<WifiScanResult>, Wi
         wifiScanReceiver = WifiScanResultsBroadcastReceiver(wifiManager, this)
         registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
 
-        start_button.setOnClickListener { wifiScanReceiver.startScanning() }
-        stop_button.setOnClickListener { wifiScanReceiver.stopScanning() }
+        start_button.setOnClickListener {
+            wifiScanReceiver.startScanning()
+        }
+        stop_button.setOnClickListener {
+            outputList.clear()
+            wifiScanReceiver.stopScanning()
+        }
     }
 
     private fun setupViews() {
@@ -54,16 +63,18 @@ class MainActivity : AppCompatActivity(), ListOutputListener<WifiScanResult>, Wi
 
     override fun onWifiScanResult(wifiScanResult: WifiScanResult) {
         outputList.add(wifiScanResult)
+
+        batch_size_tv.text = "${outputList.size()}/$BATCH_SIZE"
+    }
+
+    override fun outputData(data: List<WifiScanResult>) {
+        writeCounter++
+
+        counter_tv.text = writeCounter.toString()
     }
 
     override fun getCurrentLabel(): Int {
         return label_spinner.selectedItemPosition + 1
-    }
-
-    override fun outputData(data: List<WifiScanResult>) {
-        counter++
-
-        counter_tv.text = counter.toString()
     }
 
 }
