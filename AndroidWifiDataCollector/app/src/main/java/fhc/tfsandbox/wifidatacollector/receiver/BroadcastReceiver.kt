@@ -18,7 +18,6 @@ import fhc.tfsandbox.wifidatacollector.data.WifiStateData
 class WifiScanResultsBroadcastReceiver(private val context: Context, private val wifiManager: WifiManager, private val wifiScanListener: WifiScanResultsListener) : BroadcastReceiver() {
 
     interface WifiScanResultsListener {
-        fun getCurrentLabel(): Int
         fun onWifiScanResult(wifiScanResult: WifiScanResult)
     }
 
@@ -47,7 +46,7 @@ class WifiScanResultsBroadcastReceiver(private val context: Context, private val
         if (scanEnabled) {
             intent?.let {
                 if (it.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)) {
-                    wifiScanListener.onWifiScanResult(WifiScanResult(wifiManager.scanResults.map { WifiStateData(it.BSSID, it.SSID, it.level, wifiScanListener.getCurrentLabel()) }))
+                    wifiScanListener.onWifiScanResult(WifiScanResult(wifiManager.scanResults.map { WifiStateData(it.BSSID, it.SSID, it.level) }))
                     if (scanEnabled) {
                         wifiManager.startScan()
                     }

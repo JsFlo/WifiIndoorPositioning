@@ -2,7 +2,6 @@ package fhc.tfsandbox.wifidatacollector
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.IntentFilter
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity(),
         private const val PREF_SESSION_COUNTER = "PREF_SESSION_COUNTER"
     }
 
-    private var writeCounter = 0
     private lateinit var outputList: OutputList<WifiScanResult>
     private lateinit var wifiScanReceiver: WifiScanResultsBroadcastReceiver
     private lateinit var roomAdapter: RoomAdapter
@@ -92,22 +90,20 @@ class MainActivity : AppCompatActivity(),
 
     // one training row (one scan)
     override fun onWifiScanResult(wifiScanResult: WifiScanResult) {
+        // Add the label to the all the data coming in
+        wifiScanResult.wifiStateData.map { it.label = label_spinner.selectedItemPosition + 1 }
+        // add to the output list
         outputList.add(wifiScanResult)
+
         updateBatchSizeProgressUi(outputList.size())
     }
 
     // file has been written
     override fun outputData(data: List<WifiScanResult>) {
-        writeCounter++
         roomAdapter.incrementCounter(label_spinner.selectedItemPosition)
-        counter_tv.text = writeCounter.toString()
     }
 
-    override fun getCurrentLabel(): Int {
-        return label_spinner.selectedItemPosition + 1
-    }
-
-    fun updateBatchSizeProgressUi(batchProgress: Int) {
+    private fun updateBatchSizeProgressUi(batchProgress: Int) {
         batch_size_tv.text = "$batchProgress/$BATCH_SIZE"
     }
 
