@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(),
         WifiScanResultsBroadcastReceiver.WifiScanResultsListener {
 
     companion object {
-        private const val BATCH_SIZE = 1000
+        private const val BATCH_SIZE = 10
         private const val PREF_FILE_NAME = "session_prefs"
         private const val PREF_SESSION_COUNTER = "PREF_SESSION_COUNTER"
     }
@@ -56,16 +56,15 @@ class MainActivity : AppCompatActivity(),
 
         // provides the file output stream and handles naming the files
         val fileCounterStreamProvider = FileCounterStreamProvider(this,
-                sessionPrefix.toString(), "wifi_train_data", fileExt = ".json")
+                sessionPrefix.toString(), "debug_test", fileExt = ".json")
         // uses a stream provider to write to the files provided
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
         // list that will output a list every time the capacity reaches the batch size
         outputList = OutputList(listOf(fileWriter, this), BATCH_SIZE)
 
-        // Register receiver
+        // Get a wifi scan receiver
         val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
-        wifiScanReceiver = WifiScanResultsBroadcastReceiver(wifiManager, this)
-        registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, wifiManager, this)
 
         // setup start and stop button
         start_button.setOnClickListener {
@@ -74,11 +73,17 @@ class MainActivity : AppCompatActivity(),
         stop_button.setOnClickListener {
             outputList.clear()
             wifiScanReceiver.stopScanning()
+            updateBatchSizeProgressUi(outputList.size())
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        wifiScanReceiver.stopScanning()
+    }
+
     private fun setupViews() {
-        batch_size_tv.text = BATCH_SIZE.toString()
+        updateBatchSizeProgressUi(0)
 
         val rooms = resources.getStringArray(R.array.room_labels)
         roomAdapter = RoomAdapter.getRoomAdapter(this, rooms)
@@ -88,8 +93,7 @@ class MainActivity : AppCompatActivity(),
     // one training row (one scan)
     override fun onWifiScanResult(wifiScanResult: WifiScanResult) {
         outputList.add(wifiScanResult)
-
-        batch_size_tv.text = "${outputList.size()}/$BATCH_SIZE"
+        updateBatchSizeProgressUi(outputList.size())
     }
 
     // file has been written
@@ -101,6 +105,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun getCurrentLabel(): Int {
         return label_spinner.selectedItemPosition + 1
+    }
+
+    fun updateBatchSizeProgressUi(batchProgress: Int) {
+        batch_size_tv.text = "$batchProgress/$BATCH_SIZE"
     }
 
 }
