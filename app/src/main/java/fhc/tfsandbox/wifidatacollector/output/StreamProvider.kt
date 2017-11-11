@@ -25,6 +25,7 @@ interface StreamProvider {
  * @property counter Counter used to post fix the file name
  */
 class FileCounterStreamProvider(private val context: Context,
+                                private val sessionPrefix: String,
                                 private val fileNamePrefix: String,
                                 private val fileExt: String = ".txt",
                                 private var counter: Int = 0) : StreamProvider {
@@ -35,7 +36,7 @@ class FileCounterStreamProvider(private val context: Context,
     }
 
     private fun getFileName(postFixCount: String): String {
-        return "${fileNamePrefix}_$postFixCount$fileExt"
+        return "${sessionPrefix}_${fileNamePrefix}_$postFixCount$fileExt"
     }
 }
 

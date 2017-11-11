@@ -15,13 +15,27 @@ import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import fhc.tfsandbox.wifidatacollector.ui.RoomAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-
+/**
+ * Registers a [WifiScanResultsBroadcastReceiver] which returns a single [WifiScanResult] periodically while scanning.
+ *
+ * The [WifiScanResult] is added to the [OutputList].
+ *
+ * When the [OutputList] reaches a certain size([BATCH_SIZE]) it returns a List<[WifiScanResult]> through
+ * a [ListOutputListener]
+ *
+ *  We register 2 [ListOutputListener] with our [OutputList]:
+ *   [WifiFileOutputWriter]: Writes out to a file
+ *   [MainActivity]: Updates UI counters
+ *
+ */
 class MainActivity : AppCompatActivity(),
         ListOutputListener<WifiScanResult>,
         WifiScanResultsBroadcastReceiver.WifiScanResultsListener {
 
     companion object {
         private const val BATCH_SIZE = 10
+        private const val PREF_FILE_NAME = "session_prefs"
+        private const val PREF_SESSION_COUNTER = "PREF_SESSION_COUNTER"
     }
 
     private var writeCounter = 0
@@ -35,14 +49,25 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setupViews()
 
-        val fileCounterStreamProvider = FileCounterStreamProvider(this, "debug_testing")
+        // session prefix used for the file names
+        val prefs = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+        val sessionPrefix = prefs.getInt(PREF_SESSION_COUNTER, 0)
+        prefs.edit().putInt(PREF_SESSION_COUNTER, sessionPrefix + 1).apply()
+
+        // provides the file output stream and handles naming the files
+        val fileCounterStreamProvider = FileCounterStreamProvider(this,
+                sessionPrefix.toString(), "session_prefix_test", fileExt = ".json")
+        // uses a stream provider to write to the files provided
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
+        // list that will output a list every time the capacity reaches the batch size
         outputList = OutputList(listOf(fileWriter, this), BATCH_SIZE)
 
+        // Register receiver
         val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
         wifiScanReceiver = WifiScanResultsBroadcastReceiver(wifiManager, this)
         registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
 
+        // setup start and stop button
         start_button.setOnClickListener {
             wifiScanReceiver.startScanning()
         }
