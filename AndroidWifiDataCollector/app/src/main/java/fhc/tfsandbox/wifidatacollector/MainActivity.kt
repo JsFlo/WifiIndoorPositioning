@@ -28,8 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  *
  */
 class MainActivity : AppCompatActivity(),
-        ListOutputListener<WifiScanResult>,
-        WifiScanResultsBroadcastReceiver.WifiScanResultsListener {
+        WifiScanResultsBroadcastReceiver.WifiScanResultsListener, FileCounterStreamProvider.FileNameProvider {
 
     companion object {
         private const val BATCH_SIZE = 10
@@ -54,11 +53,11 @@ class MainActivity : AppCompatActivity(),
 
         // provides the file output stream and handles naming the files
         val fileCounterStreamProvider = FileCounterStreamProvider(this,
-                sessionPrefix.toString(), "debug_test", fileExt = ".json")
+                sessionPrefix.toString(), "debug_test", fileExt = ".json", fileNameProvider = this)
         // uses a stream provider to write to the files provided
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
         // list that will output a list every time the capacity reaches the batch size
-        outputList = OutputList(listOf(fileWriter, this), BATCH_SIZE)
+        outputList = OutputList(listOf(fileWriter), BATCH_SIZE)
 
         // Get a wifi scan receiver
         val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -98,9 +97,9 @@ class MainActivity : AppCompatActivity(),
         updateBatchSizeProgressUi(outputList.size())
     }
 
-    // file has been written
-    override fun outputData(data: List<WifiScanResult>) {
+    override fun getFileName(internalCounter: Int, sessionPrefix: String, fileName: String, fileExt: String): String {
         roomAdapter.incrementCounter(label_spinner.selectedItemPosition)
+        return "${sessionPrefix}_${fileName}_label_${label_spinner.selectedItemPosition}_$internalCounter$fileExt"
     }
 
     private fun updateBatchSizeProgressUi(batchProgress: Int) {
