@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WifiDataCollector</string>
+    <string name="counter">Count: </string>
 </resources>
