@@ -8,6 +8,22 @@ interface StreamProvider {
     fun getFileOutputStream(): FileOutputStream
 }
 
+/**
+ * Provides a [FileOutputStream] using the [context] passed in.
+ *
+ * Every time the [getFileOutputStream] method is called a different [FileOutputStream] will
+ * be created with a different name based on [fileNamePrefix],[counter] and [fileExt].
+ *
+ * Ex.
+ * myData_01.txt
+ * myData_02.txt
+ * myData_03.txt
+ *
+ * @property context Context used to open [FileOutputStream]
+ * @property fileNamePrefix file name prefix
+ * @property fileExt file extension
+ * @property counter Counter used to post fix the file name
+ */
 class FileCounterStreamProvider(private val context: Context,
                                 private val fileNamePrefix: String,
                                 private val fileExt: String = ".txt",
