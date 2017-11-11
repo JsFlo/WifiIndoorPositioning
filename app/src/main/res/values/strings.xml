@@ -3,4 +3,16 @@
     <string name="counter">Count: </string>
     <string name="button_start">Start</string>
     <string name="button_end">Stop</string>
+
+    <string name="living_room">Living Room</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="restroom">Restroom</string>
+    <string name="bedroom">Bedroom</string>
+
+    <string-array name="room_labels">
+        <item>@string/living_room</item>
+        <item>@string/kitchen</item>
+        <item>@string/restroom</item>
+        <item>@string/bedroom</item>
+    </string-array>
 </resources>

@@ -1,7 +1,6 @@
 package fhc.tfsandbox.wifidatacollector.output
 
 import com.google.gson.Gson
-import fhc.tfsandbox.wifidatacollector.common.debugPrint
 import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
 import java.io.OutputStreamWriter
 
@@ -20,12 +19,8 @@ abstract class ListOutputStreamWriter<in T>(private val streamProvider: StreamPr
     abstract protected fun write(writer: OutputStreamWriter, data: List<T>)
 }
 
-class WifiFileOutputWriter(streamProvider: StreamProvider) :
-        ListOutputStreamWriter<WifiScanResult>(streamProvider) {
-    override fun write(writer: OutputStreamWriter, data: List<WifiScanResult>) {
-        val gson = Gson()
-        "Writer received ${data.size} of data".debugPrint()
-        writer.write(gson.toJson(data))
-    }
+class WifiFileOutputWriter(streamProvider: StreamProvider) : ListOutputStreamWriter<WifiScanResult>(streamProvider) {
+    private val gson = Gson()
+    override fun write(writer: OutputStreamWriter, data: List<WifiScanResult>) = writer.write(gson.toJson(data))
 }
 

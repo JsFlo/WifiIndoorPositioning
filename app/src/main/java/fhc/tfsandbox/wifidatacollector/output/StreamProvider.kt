@@ -8,7 +8,6 @@ interface StreamProvider {
     fun getFileOutputStream(): FileOutputStream
 }
 
-// should be weak ref to context
 class FileCounterStreamProvider(private val context: Context,
                                 private val fileNamePrefix: String,
                                 private val fileExt: String = ".txt",
