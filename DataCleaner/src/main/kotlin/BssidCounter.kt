@@ -9,14 +9,15 @@ data class ScanResultStats(val bssid: String, val ssid: String)
 
 fun main(args: Array<String>) {
     val gson = Gson()
+    val scanResultsMap = hashMapOf<ScanResultStats, Int>()
     File(TRAIN_DATA_FILE_PATH).walk().filter { !it.isDirectory }.forEach {
-        onWifiScanResults(parseWifiScanResults(gson, readFileAsString(it)))
+        addOrUpdateMap(scanResultsMap, parseWifiScanResults(gson, readFileAsString(it)))
     }
+    val sortedMap = scanResultsMap.toList().sortedBy { (key, value) -> -value }.toMap()
+    writeToFile(sortedMap)
 }
 
-fun onWifiScanResults(wifiScanResults: Array<WifiScanResult>) {
-    val scanResultsMap = hashMapOf<ScanResultStats, Int>()
-
+fun addOrUpdateMap(scanResultsMap: HashMap<ScanResultStats, Int>, wifiScanResults: Array<WifiScanResult>) {
     wifiScanResults.flatMap {
         it.wifiStateData.map { ScanResultStats(it.bssid, it.ssid) }
     }.forEach {
@@ -26,10 +27,6 @@ fun onWifiScanResults(wifiScanResults: Array<WifiScanResult>) {
             scanResultsMap.put(it, 1)
         }
     }
-
-    val sortedMap = scanResultsMap.toList().sortedBy { (key, value) -> -value }.toMap()
-
-    writeToFile(sortedMap)
 }
 
 fun writeToFile(sortedMap: Map<ScanResultStats, Int>) {
