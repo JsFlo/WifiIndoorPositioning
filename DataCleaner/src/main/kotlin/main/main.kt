@@ -21,26 +21,22 @@ val listOfBssidsChosen =
                 "c4:04:15:4a:16:3a",
                 "48:5d:36:53:30:0e")
 
-public class App {
-    companion object {
-        @JvmStatic
-        public fun main(args: Array<String>) {
 
-            val needToSelectBssids = listOfBssidsChosen.isEmpty()
+public fun main(args: Array<String>) {
 
-            // write the count map if we need to handpick out bssids
-            if (needToSelectBssids) {
-                val sortedResultMap = getCountMap(TRAIN_DATA_FILE_PATH)
-                writeToFile(COUNT_MAP_OUTPUT_FILE_PATH, {
-                    sortedResultMap.forEach { k, v -> it.println("Key: $k --- Value: $v  \n") }
-                })
-            }
+    val needToSelectBssids = listOfBssidsChosen.isEmpty()
 
-            // filter data
-            val filteredData = filterData(TRAIN_DATA_FILE_PATH, listOfBssidsChosen)
-            println("Finished!")
-        }
+    // write the count map if we need to handpick out bssids
+    if (needToSelectBssids) {
+        val sortedResultMap = getCountMap(TRAIN_DATA_FILE_PATH)
+        writeToFile(COUNT_MAP_OUTPUT_FILE_PATH, {
+            sortedResultMap.forEach { k, v -> it.println("Key: $k --- Value: $v  \n") }
+        })
     }
+
+    // filter data
+    val filteredData = filterData(TRAIN_DATA_FILE_PATH, listOfBssidsChosen)
+    println("Finished!")
 }
 
 private fun writeToFile(outputFileRelativeFilePath: String, write: (PrintWriter) -> Unit) {
