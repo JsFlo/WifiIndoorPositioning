@@ -1,23 +1,17 @@
-import com.google.gson.Gson
 import data.WifiScanResult
-import java.io.File
-
-
-const val TRAIN_DATA_FILE_PATH = "./src/main/resources/file/"
 
 data class ScanResultStats(val bssid: String, val ssid: String)
 
-fun main(args: Array<String>) {
-    val gson = Gson()
+fun getCountMap(trainingDataFilePath: String): Map<ScanResultStats, Int> {
+
     val scanResultsMap = hashMapOf<ScanResultStats, Int>()
-    File(TRAIN_DATA_FILE_PATH).walk().filter { !it.isDirectory }.forEach {
-        addOrUpdateMap(scanResultsMap, parseWifiScanResults(gson, readFileAsString(it)))
-    }
-    val sortedMap = scanResultsMap.toList().sortedBy { (key, value) -> -value }.toMap()
-    writeToFile(sortedMap)
+    readAndParse(trainingDataFilePath, { arrayOfWifiScanResults ->
+        addOrUpdateMap(scanResultsMap, arrayOfWifiScanResults)
+    })
+    return scanResultsMap.toList().sortedBy { (_, value) -> -value }.toMap()
 }
 
-fun addOrUpdateMap(scanResultsMap: HashMap<ScanResultStats, Int>, wifiScanResults: Array<WifiScanResult>) {
+private fun addOrUpdateMap(scanResultsMap: HashMap<ScanResultStats, Int>, wifiScanResults: Array<WifiScanResult>) {
     wifiScanResults.flatMap {
         it.wifiStateData.map { ScanResultStats(it.bssid, it.ssid) }
     }.forEach {
@@ -28,13 +22,3 @@ fun addOrUpdateMap(scanResultsMap: HashMap<ScanResultStats, Int>, wifiScanResult
         }
     }
 }
-
-fun writeToFile(sortedMap: Map<ScanResultStats, Int>) {
-    sortedMap.forEach { k, v -> println("Key: $k --- Value: $v  \n") }
-}
-
-fun parseWifiScanResults(gson: Gson, rawString: String): Array<WifiScanResult> =
-        gson.fromJson(rawString, Array<WifiScanResult>::class.java)
-
-fun readFileAsString(file: File): String =
-        file.inputStream().bufferedReader().use { it.readText() }
