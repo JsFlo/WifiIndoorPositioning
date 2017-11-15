@@ -34,16 +34,17 @@ public fun main(args: Array<String>) {
         writeToFile(COUNT_MAP_OUTPUT_FILE_PATH, {
             sortedResultMap.forEach { k, v -> it.println("Key: $k --- Value: $v  \n") }
         })
+    } else {
+
+        // filter data
+        val filteredData = filterData(TRAIN_DATA_FILE_PATH, listOfBssidsChosen)
+
+        // scramble (random sort)
+        Collections.shuffle(filteredData)
+
+        // save to file
+        formatAndSave(FILTERED_TRAIN_DATA_LABELS_PATH, FILTERED_TRAIN_DATA_FEATURES_PATH, filteredData)
     }
-
-    // filter data
-    val filteredData = filterData(TRAIN_DATA_FILE_PATH, listOfBssidsChosen)
-
-    // scramble (random sort)
-    Collections.shuffle(filteredData)
-
-    // save to file
-    formatAndSave(FILTERED_TRAIN_DATA_LABELS_PATH, FILTERED_TRAIN_DATA_FEATURES_PATH, filteredData)
 
 }
 
@@ -74,9 +75,7 @@ fun formatAndSave(labelsPath: String, featuresPath: String, filteredData: List<W
                 }
 
                 features_writer.println("$a4810, $a001f, $a4822, $ac816, $ac814, $a4824, $ac43a, $a480e".format())
-                // EACH SCAN IS ONLY 1 LABEL (currently not enforced in app)
-                // TODO: Move label out out wifiStateData and on WifiScanData to enforce this
-                label_writer.println("${it.wifiStateData[0].label}")
+                label_writer.println("${it.label}")
             }
         })
     })

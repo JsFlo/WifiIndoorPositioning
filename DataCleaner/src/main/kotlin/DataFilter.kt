@@ -9,7 +9,7 @@ public fun filterData(trainDataFilePath: String, listOfBssidsChosen: Set<String>
                     val filteredList = it.wifiStateData.filter {
                         listOfBssidsChosen.contains(it.bssid)
                     }
-                    WifiScanResult(filteredList, it.timeStamp)
+                    WifiScanResult(filteredList, it.timeStamp, it.label)
                 }.filter {
                     // make sure we don't have a scan result with out any data
                     // sizes should match (only scan results which have values for all in list passed in)

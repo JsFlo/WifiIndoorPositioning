@@ -14,4 +14,3 @@ private fun parseWifiScanResults(gson: Gson, rawString: String): Array<WifiScanR
 private fun readFileAsString(file: File): String =
         file.inputStream().bufferedReader().use { it.readText() }
 
-
