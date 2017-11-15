@@ -22,16 +22,15 @@ import kotlinx.android.synthetic.main.activity_main.*
  * When the [OutputList] reaches a certain size([BATCH_SIZE]) it returns a List<[WifiScanResult]> through
  * a [ListOutputListener]
  *
- *  We register 2 [ListOutputListener] with our [OutputList]:
+ *  We register (1) [ListOutputListener] with our [OutputList]:
  *   [WifiFileOutputWriter]: Writes out to a file
- *   [MainActivity]: Updates UI counters
  *
  */
 class MainActivity : AppCompatActivity(),
         WifiScanResultsBroadcastReceiver.WifiScanResultsListener, FileCounterStreamProvider.FileNameProvider {
 
     companion object {
-        private const val BATCH_SIZE = 10
+        private const val BATCH_SIZE = 1000
         private const val PREF_FILE_NAME = "session_prefs"
         private const val PREF_SESSION_COUNTER = "PREF_SESSION_COUNTER"
     }
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity(),
 
         // provides the file output stream and handles naming the files
         val fileCounterStreamProvider = FileCounterStreamProvider(this,
-                sessionPrefix.toString(), "debug_test", fileExt = ".json", fileNameProvider = this)
+                sessionPrefix.toString(), "wifi_train_data", fileExt = ".json", fileNameProvider = this)
         // uses a stream provider to write to the files provided
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
         // list that will output a list every time the capacity reaches the batch size
@@ -89,8 +88,8 @@ class MainActivity : AppCompatActivity(),
 
     // one training row (one scan)
     override fun onWifiScanResult(wifiScanResult: WifiScanResult) {
-        // Add the label to the all the data coming in
-        wifiScanResult.wifiStateData.map { it.label = label_spinner.selectedItemPosition + 1 }
+        // Add the label to the scan coming in
+        wifiScanResult.label = label_spinner.selectedItemPosition + 1
         // add to the output list
         outputList.add(wifiScanResult)
 
