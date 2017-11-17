@@ -64,6 +64,61 @@ In this phase we are **collecting training samples** the **label** must be **spe
   This filtering will be done in the next step .
 
 ## Data Cleaning<a name="header_data_cleaning"></a>
+
+The goal in this section is to end up with 2 sets and 4 files.
+
+Sets:
+1. Training data (**80%** of the data collected)
+  * features: train_data_features
+  * labels: train_data_labels
+2. Test Data (**20%**)
+  * features: test_data_features
+  * labels: test_data_labels
+
+### How
+```text
++---------------+---------------------------------+
+| Training Rows | Access Points                   |
++               +---------------------------------+
+|               | A1  | A2  | A3  | A4  | A5 | A6 |
++---------------+-----+-----+-----+-----+----+----+
+| Row 1         | -98 | -54 | 0   | -6  | -9 | -5 |
++---------------+-----+-----+-----+-----+----+----+
+| Row 2         | -45 | -64 | -45 | -8  | 0  | 0  |
++---------------+-----+-----+-----+-----+----+----+
+| Row 3         | -67 | -78 | -34 | -26 | -8 | 0  |
++---------------+-----+-----+-----+-----+----+----+
+```
+The **data collected** in the **last phase** collected a bunch of wifi strengths from some access points that are **not always there** (0 values).
+
+I decided to **handpick** the the **access points** based on the **number of times** the access points **shows up in the data**.
+
+I created a **map** that mapped the access point and the number of times they showed up:
+```text
+A1: 900
+A2: 850
+A3: 450
+A4: 800
+```
+In the example above **I would select A1, A2, A4** because they show up the most.
+
+### Filtering
+**After handpicking** the access points I **filtered out** the data that did not have a **value for each**.
+
+Sample Output:
+
+#### test|train_data_features:
+
+```text
+-56, -23, -89
+-46, -25, -68
+```
+#### test|train_data_labels:
+```text
+1, 0, 0
+0, 1, 0
+```
+
 ## Training<a name="header_training"></a>
 ## Testing<a name="header_testing"></a>
 ## Notes<a name="header_notes"></a>
