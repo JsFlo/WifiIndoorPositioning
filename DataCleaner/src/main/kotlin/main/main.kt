@@ -9,8 +9,15 @@ import java.util.*
 
 private const val TRAIN_DATA_FILE_PATH = "./src/main/resources/file/"
 private const val COUNT_MAP_OUTPUT_FILE_PATH = "./src/main/out/results.txt"
-private const val FILTERED_TRAIN_DATA_FEATURES_PATH = "./src/main/filtered_out/features/filtered_features"
-private const val FILTERED_TRAIN_DATA_LABELS_PATH = "./src/main/filtered_out/labels/filtered_labels"
+
+private const val FILTERED_TRAIN_DATA_FEATURES_PATH = "./src/main/filtered_out/features/train_features"
+private const val FILTERED_TRAIN_DATA_LABELS_PATH = "./src/main/filtered_out/labels/train_labels"
+
+private const val FILTERED_TEST_DATA_FEATURES_PATH = "./src/main/filtered_out/features/test_features"
+private const val FILTERED_TEST_DATA_LABELS_PATH = "./src/main/filtered_out/labels/test_labels"
+
+private const val PERCENT_OF_TEST_DATA = .20
+
 // Hand picked after writing the count map
 val listOfBssidsChosen =
         setOf(
@@ -42,8 +49,19 @@ public fun main(args: Array<String>) {
         // scramble (random sort)
         Collections.shuffle(filteredData)
 
-        // save to file
-        formatAndSave(FILTERED_TRAIN_DATA_LABELS_PATH, FILTERED_TRAIN_DATA_FEATURES_PATH, filteredData)
+        val testIndex: Int = ((filteredData.size * PERCENT_OF_TEST_DATA).toInt())
+
+        val listOfResultList = filteredData.withIndex().groupBy { it.index < testIndex }.map { it.value.map { it.value } }
+        if (listOfResultList.size == 2) {
+            val testData = listOfResultList[0]
+            val trainData = listOfResultList[1]
+
+            // save to train
+            formatAndSave(FILTERED_TEST_DATA_LABELS_PATH, FILTERED_TEST_DATA_FEATURES_PATH, testData)
+            formatAndSave(FILTERED_TRAIN_DATA_LABELS_PATH, FILTERED_TRAIN_DATA_FEATURES_PATH, trainData)
+        } else {
+            println("List of grouped results does not equal 2")
+        }
     }
 
 }
