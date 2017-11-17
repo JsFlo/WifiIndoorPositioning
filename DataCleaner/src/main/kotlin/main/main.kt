@@ -18,6 +18,8 @@ private const val FILTERED_TEST_DATA_LABELS_PATH = "./src/main/filtered_out/labe
 
 private const val PERCENT_OF_TEST_DATA = .20
 
+private const val NUMBER_LABELS = 4
+
 // Hand picked after writing the count map
 val listOfBssidsChosen =
         setOf(
@@ -93,7 +95,7 @@ fun formatAndSave(labelsPath: String, featuresPath: String, filteredData: List<W
                 }
 
                 features_writer.println("$a4810, $a001f, $a4822, $ac816, $ac814, $a4824, $ac43a, $a480e".format())
-                label_writer.println("${it.label}")
+                label_writer.println(oneHotVector(it.label, NUMBER_LABELS))
             }
         })
     })
@@ -106,4 +108,22 @@ private fun writeToFile(outputFileRelativeFilePath: String, write: (PrintWriter)
     file.printWriter().use {
         write(it)
     }
+}
+
+// 1 = [1, 0, 0, 0 ... n ] where n = listOfBssids.size
+// 2 = [0, 1, 0, 0 ... n ]
+private fun oneHotVector(label: Int, numberOfLabels: Int): String {
+    var stringBuilder = StringBuilder()
+
+    for (i in 0 until numberOfLabels) {
+        if (i == label - 1) {
+            stringBuilder.append("1")
+        } else {
+            stringBuilder.append("0")
+        }
+        if (i != numberOfLabels - 1) {
+            stringBuilder.append(",")
+        }
+    }
+    return stringBuilder.toString()
 }
