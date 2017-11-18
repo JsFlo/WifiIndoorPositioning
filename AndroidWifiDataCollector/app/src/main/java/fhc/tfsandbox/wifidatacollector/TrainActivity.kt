@@ -12,7 +12,7 @@ import fhc.tfsandbox.wifidatacollector.output.OutputList
 import fhc.tfsandbox.wifidatacollector.output.WifiFileOutputWriter
 import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import fhc.tfsandbox.wifidatacollector.ui.RoomAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_train.*
 
 /**
  * Registers a [WifiScanResultsBroadcastReceiver] which returns a single [WifiScanResult] periodically while scanning.
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  *   [WifiFileOutputWriter]: Writes out to a file
  *
  */
-class MainActivity : AppCompatActivity(),
+class TrainActivity : AppCompatActivity(),
         WifiScanResultsBroadcastReceiver.WifiScanResultsListener, FileCounterStreamProvider.FileNameProvider {
 
     companion object {
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(),
     @SuppressLint("WifiManagerLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_train)
         setupViews()
 
         // session prefix used for the file names
