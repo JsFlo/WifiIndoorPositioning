@@ -120,5 +120,11 @@ Sample Output:
 ```
 
 ## Training<a name="header_training"></a>
+
+### Creating the model
+*planning on testing different architectures* (svm, deep/hidden layers)
+
+### Base Model
+The **base model** is a simple **logistic regression** model which uses **cross entropy** as the cost function, **gradient descent** as its optimizer and **softmax** for multi class classification. Trained using **stochastic batching**.
 ## Testing<a name="header_testing"></a>
 ## Notes<a name="header_notes"></a>
