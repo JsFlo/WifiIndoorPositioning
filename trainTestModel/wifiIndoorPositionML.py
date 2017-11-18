@@ -59,24 +59,24 @@ def main(_):
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         print(sess.run(accuracy, feed_dict={x: test_features, y_real: test_labels}))
 
-        # export
-        export_graph = tf.Graph()
-        with export_graph.as_default():
+    # export
+    export_graph = tf.Graph()
+    with export_graph.as_default():
 
-            export_input = tf.placeholder(tf.float32, [None, NUMBER_FEATURES], name="export_input")
-            # freeze weights
-            WC = tf.constant(W.eval(sess), name="weights_constant")
-            BC = tf.constant(b.eval(sess), name="bias_constant")
+        export_input = tf.placeholder(tf.float32, [None, NUMBER_FEATURES], name="export_input")
+        # freeze weights
+        WC = tf.constant(W.eval(sess), name="weights_constant")
+        BC = tf.constant(b.eval(sess), name="bias_constant")
 
-            export_predicted = tf.add(tf.matmul(export_input, WC, name="export_matmul"), BC, name="export_add")
-            OUTPUT = tf.nn.softmax(export_predicted, name="export_output")
+        export_predicted = tf.add(tf.matmul(export_input, WC, name="export_matmul"), BC, name="export_add")
+        OUTPUT = tf.nn.softmax(export_predicted, name="export_output")
 
-            export_sess = tf.Session()
-            init = tf.initialize_all_variables()
-            export_sess.run(init)
+        export_sess = tf.Session()
+        init = tf.initialize_all_variables()
+        export_sess.run(init)
 
-            graph_def = export_graph.as_graph_def()
-            tf.train.write_graph(graph_def, MODEL_EXPORT_PATH, MODEL_NAME, as_text=False)
+        graph_def = export_graph.as_graph_def()
+        tf.train.write_graph(graph_def, MODEL_EXPORT_PATH, MODEL_NAME, as_text=False)
 
 
 if __name__ == '__main__':
