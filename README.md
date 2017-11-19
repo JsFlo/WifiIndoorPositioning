@@ -30,7 +30,7 @@ It captures the **BSSID** to use as a **unique identifier**,the **level** (*RSSI
 
 In this phase we are **collecting training samples** the **label** must be **specified** by someone (*Supervised Learning!*).
 
-<img src="/images/wifi_data_collector.png" width="200" height="400" />
+<img src="/images/wifi_train.png" width="200" height="400" />
 
 **User Interaction**:
 * Start Button
@@ -126,5 +126,13 @@ Sample Output:
 
 ### Base Model
 The **base model** is a simple **logistic regression** model which uses **cross entropy** as the cost function, **gradient descent** as its optimizer and **softmax** for multi class classification. Trained using **stochastic batching**.
+
+* Total examples: 40,109
+  * Train: 32,088
+  * Test: 8,021
+* Training epochs: 25,000
+* accuracy: 97%
+
+<img src="/images/wifi_test.png" width="200" height="400" />
 ## Testing<a name="header_testing"></a>
 ## Notes<a name="header_notes"></a>
