@@ -1,15 +1,16 @@
-package fhc.tfsandbox.wifidatacollector
+package fhc.tfsandbox.wifidatacollector.train
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import fhc.tfsandbox.wifidatacollector.R
 import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
-import fhc.tfsandbox.wifidatacollector.output.FileCounterStreamProvider
-import fhc.tfsandbox.wifidatacollector.output.ListOutputListener
-import fhc.tfsandbox.wifidatacollector.output.OutputList
-import fhc.tfsandbox.wifidatacollector.output.WifiFileOutputWriter
+import fhc.tfsandbox.wifidatacollector.train.output.FileCounterStreamProvider
+import fhc.tfsandbox.wifidatacollector.train.output.ListOutputListener
+import fhc.tfsandbox.wifidatacollector.train.output.OutputList
+import fhc.tfsandbox.wifidatacollector.train.output.WifiFileOutputWriter
 import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import fhc.tfsandbox.wifidatacollector.ui.RoomAdapter
 import kotlinx.android.synthetic.main.activity_train.*
@@ -102,7 +103,7 @@ class TrainActivity : AppCompatActivity(),
     }
 
     private fun updateBatchSizeProgressUi(batchProgress: Int) {
-        batch_size_tv.text = "$batchProgress/$BATCH_SIZE"
+        batch_size_tv.text = "$batchProgress/${BATCH_SIZE}"
     }
 
 }

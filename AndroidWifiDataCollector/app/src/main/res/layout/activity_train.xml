@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:padding="8dp"
-    tools:context=".TrainActivity">
+    tools:context=".train.TrainActivity">
 
     <Spinner
         android:id="@+id/label_spinner"

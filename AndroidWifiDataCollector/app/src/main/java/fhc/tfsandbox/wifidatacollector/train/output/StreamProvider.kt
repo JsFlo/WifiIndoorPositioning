@@ -1,4 +1,4 @@
-package fhc.tfsandbox.wifidatacollector.output
+package fhc.tfsandbox.wifidatacollector.train.output
 
 import android.content.Context
 import java.io.FileOutputStream

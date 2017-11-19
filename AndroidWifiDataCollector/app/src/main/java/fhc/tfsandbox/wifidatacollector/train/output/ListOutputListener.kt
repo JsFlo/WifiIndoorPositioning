@@ -1,4 +1,4 @@
-package fhc.tfsandbox.wifidatacollector.output
+package fhc.tfsandbox.wifidatacollector.train.output
 
 import com.google.gson.Gson
 import fhc.tfsandbox.wifidatacollector.data.WifiScanResult

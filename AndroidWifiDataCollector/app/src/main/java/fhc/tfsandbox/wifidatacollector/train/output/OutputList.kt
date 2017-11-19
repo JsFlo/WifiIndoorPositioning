@@ -1,4 +1,4 @@
-package fhc.tfsandbox.wifidatacollector.output
+package fhc.tfsandbox.wifidatacollector.train.output
 
 /**
  * Collection wrapper that only allows adding one element at a time.
