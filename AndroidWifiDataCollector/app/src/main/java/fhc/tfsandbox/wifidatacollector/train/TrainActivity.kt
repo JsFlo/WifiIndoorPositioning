@@ -1,17 +1,17 @@
 package fhc.tfsandbox.wifidatacollector.train
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import fhc.tfsandbox.wifidatacollector.MyApplication
 import fhc.tfsandbox.wifidatacollector.R
 import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
+import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
+import fhc.tfsandbox.wifidatacollector.train.TrainActivity.Companion.BATCH_SIZE
 import fhc.tfsandbox.wifidatacollector.train.output.FileCounterStreamProvider
 import fhc.tfsandbox.wifidatacollector.train.output.ListOutputListener
 import fhc.tfsandbox.wifidatacollector.train.output.OutputList
 import fhc.tfsandbox.wifidatacollector.train.output.WifiFileOutputWriter
-import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import fhc.tfsandbox.wifidatacollector.ui.RoomAdapter
 import kotlinx.android.synthetic.main.activity_train.*
 
@@ -40,7 +40,6 @@ class TrainActivity : AppCompatActivity(),
     private lateinit var wifiScanReceiver: WifiScanResultsBroadcastReceiver
     private lateinit var roomAdapter: RoomAdapter
 
-    @SuppressLint("WifiManagerLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_train)
@@ -53,15 +52,18 @@ class TrainActivity : AppCompatActivity(),
 
         // provides the file output stream and handles naming the files
         val fileCounterStreamProvider = FileCounterStreamProvider(this,
-                sessionPrefix.toString(), "wifi_train_data", fileExt = ".json", fileNameProvider = this)
+                sessionPrefix.toString(),
+                "wifi_train_data",
+                fileExt = ".json",
+                fileNameProvider = this)
         // uses a stream provider to write to the files provided
         val fileWriter = WifiFileOutputWriter(fileCounterStreamProvider)
         // list that will output a list every time the capacity reaches the batch size
         outputList = OutputList(listOf(fileWriter), BATCH_SIZE)
 
         // Get a wifi scan receiver
-        val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
-        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, wifiManager, this)
+        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this,
+                (application as MyApplication).wifiManager, this)
 
         // setup start and stop button
         start_button.setOnClickListener {

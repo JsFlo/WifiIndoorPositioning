@@ -1,11 +1,9 @@
 package fhc.tfsandbox.wifidatacollector.test
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.wifi.WifiManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
+import fhc.tfsandbox.wifidatacollector.MyApplication
 import fhc.tfsandbox.wifidatacollector.R
 import fhc.tfsandbox.wifidatacollector.common.debugPrint
 import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
@@ -27,8 +25,8 @@ class TestActivity : AppCompatActivity(), WifiScanResultsBroadcastReceiver.WifiS
         roomLabels = resources.getStringArray(R.array.room_labels)
 
         // Get a wifi scan receiver
-        val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
-        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, wifiManager, this, false)
+        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, (application as MyApplication).wifiManager,
+                this, false)
 
         tfInference = TensorFlowInferenceInterface(assets, "wifi_position.pb")
 
