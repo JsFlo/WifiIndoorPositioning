@@ -62,7 +62,7 @@ class TrainActivity : AppCompatActivity(),
         outputList = OutputList(listOf(fileWriter), BATCH_SIZE)
 
         // Get a wifi scan receiver
-        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this,
+        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, this,
                 (application as MyApplication).wifiManager, this)
 
         // setup start and stop button

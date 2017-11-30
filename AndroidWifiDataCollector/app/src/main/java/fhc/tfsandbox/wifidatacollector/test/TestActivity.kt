@@ -22,7 +22,7 @@ class TestActivity : AppCompatActivity(), WifiScanResultsBroadcastReceiver.WifiS
         roomLabels = resources.getStringArray(R.array.room_labels)
 
         // Get a wifi scan receiver
-        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, (application as MyApplication).wifiManager,
+        wifiScanReceiver = WifiScanResultsBroadcastReceiver(this, this, (application as MyApplication).wifiManager,
                 this, false)
 
         tfInference = TensorFlowInferenceInterface(assets, "wifi_position.pb")

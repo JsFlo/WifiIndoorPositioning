@@ -1,5 +1,9 @@
 package fhc.tfsandbox.wifidatacollector.receiver
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,10 +16,17 @@ import fhc.tfsandbox.wifidatacollector.models.WifiStateData
 /**
  * Acts as a [WifiManager] wrapper which will notify [WifiScanResultsListener] when a list of scan results
  * are returned.
- *
- * TODO: context should be a weak ref
  */
-class WifiScanResultsBroadcastReceiver(private val context: Context, private val wifiManager: WifiManager, private val wifiScanListener: WifiScanResultsListener, private val continuousScan: Boolean = true) : BroadcastReceiver() {
+class WifiScanResultsBroadcastReceiver(lifecycleOwner: LifecycleOwner,
+                                       private val context: Context,
+                                       private val wifiManager: WifiManager,
+                                       private val wifiScanListener: WifiScanResultsListener,
+                                       private val continuousScan: Boolean = true)
+    : BroadcastReceiver(), LifecycleObserver {
+
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
 
     interface WifiScanResultsListener {
         fun onWifiScanResult(wifiScanResult: WifiScanResult)
@@ -26,7 +37,6 @@ class WifiScanResultsBroadcastReceiver(private val context: Context, private val
     fun startScanning() {
         if (!scanEnabled) {
             scanEnabled = true
-            context.registerReceiver(this, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
             wifiManager.startScan()
         }
     }
@@ -34,11 +44,6 @@ class WifiScanResultsBroadcastReceiver(private val context: Context, private val
     fun stopScanning() {
         if (scanEnabled) {
             scanEnabled = false
-            try {
-                context.unregisterReceiver(this)
-            } catch (e: IllegalArgumentException) {
-                "Wasn't registered :(".debugPrint()
-            }
         }
     }
 
@@ -55,6 +60,21 @@ class WifiScanResultsBroadcastReceiver(private val context: Context, private val
                     }
                 }
             }
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onStart() {
+        context.registerReceiver(this,
+                IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onStop() {
+        try {
+            context.unregisterReceiver(this)
+        } catch (e: IllegalArgumentException) {
+            "Wasn't registered :(".debugPrint()
         }
     }
 
