@@ -38,10 +38,7 @@ class TestActivity : AppCompatActivity(), WifiScanResultsBroadcastReceiver.WifiS
 
     override fun onWifiScanResult(wifiScanResult: WifiScanResult) {
         val modelInput = ModelInput.getModelInput(wifiScanResult)
-        val inputString = StringBuilder()
-        modelInput.toFormattedOutput().forEach { inputString.append("$it, ") }
-        inputString.toString().debugPrint()
-        input_et.text = inputString.toString()
+        input_et.text = modelInput.toFormattedOutput().joinToString()
         //feed
         tfInference.feed("export_input", modelInput)
 
