@@ -1,12 +1,10 @@
 package fhc.tfsandbox.wifidatacollector.test
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import fhc.tfsandbox.wifidatacollector.MyApplication
 import fhc.tfsandbox.wifidatacollector.R
-import fhc.tfsandbox.wifidatacollector.common.debugPrint
-import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
+import fhc.tfsandbox.wifidatacollector.models.WifiScanResult
 import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import kotlinx.android.synthetic.main.activity_test.*
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface
@@ -17,7 +15,6 @@ class TestActivity : AppCompatActivity(), WifiScanResultsBroadcastReceiver.WifiS
     private lateinit var tfInference: TensorFlowInferenceInterface
     private lateinit var roomLabels: Array<String>
 
-    @SuppressLint("WifiManagerLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)

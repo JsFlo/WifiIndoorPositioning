@@ -1,7 +1,7 @@
 package fhc.tfsandbox.wifidatacollector.train.output
 
 import com.google.gson.Gson
-import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
+import fhc.tfsandbox.wifidatacollector.models.WifiScanResult
 import java.io.OutputStreamWriter
 
 interface ListOutputListener<in T> {

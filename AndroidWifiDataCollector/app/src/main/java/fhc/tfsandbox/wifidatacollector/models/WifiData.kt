@@ -1,4 +1,4 @@
-package fhc.tfsandbox.wifidatacollector.data
+package fhc.tfsandbox.wifidatacollector.models
 
 data class WifiStateData(val bssid: String, val ssid: String, val rssi: Int)
 

@@ -1,6 +1,6 @@
 package fhc.tfsandbox.wifidatacollector.test
 
-import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
+import fhc.tfsandbox.wifidatacollector.models.WifiScanResult
 
 data class ModelInput(private val a4810: Float,
                       private val a001f: Float,

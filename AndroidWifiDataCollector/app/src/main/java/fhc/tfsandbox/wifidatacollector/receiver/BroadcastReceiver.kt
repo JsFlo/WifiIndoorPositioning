@@ -6,8 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.wifi.WifiManager
 import fhc.tfsandbox.wifidatacollector.common.debugPrint
-import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
-import fhc.tfsandbox.wifidatacollector.data.WifiStateData
+import fhc.tfsandbox.wifidatacollector.models.WifiScanResult
+import fhc.tfsandbox.wifidatacollector.models.WifiStateData
 
 /**
  * Acts as a [WifiManager] wrapper which will notify [WifiScanResultsListener] when a list of scan results

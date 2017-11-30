@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import fhc.tfsandbox.wifidatacollector.MyApplication
 import fhc.tfsandbox.wifidatacollector.R
-import fhc.tfsandbox.wifidatacollector.data.WifiScanResult
+import fhc.tfsandbox.wifidatacollector.models.WifiScanResult
 import fhc.tfsandbox.wifidatacollector.receiver.WifiScanResultsBroadcastReceiver
 import fhc.tfsandbox.wifidatacollector.train.TrainActivity.Companion.BATCH_SIZE
 import fhc.tfsandbox.wifidatacollector.train.output.FileCounterStreamProvider
